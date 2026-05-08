@@ -59,10 +59,10 @@ module.exports = class PetController {
             const newPet = await pet.save()
             res.status(201).json({
                 message: 'Pet cadastrado com sucesso!',
-                newPet,
+                data:newPet,
             })
         } catch (error) {
-            res.status(500).json({ message: error })
+            res.status(503).json({ message: error })
         }
 
     }
@@ -70,17 +70,37 @@ module.exports = class PetController {
         const pets = await Pet.find().sort('-createdAt')
 
         res.status(200).json({
-            sucess: true,
+            success: true,
             count: pets.length,
-            pets,
+            data: pets,
         })
         return
     }
     static async getAllUserPets(req, res) {
-        res.status(200).json({ message: 'em breve....' })
+        const token = getToken(req)
+        const user = await getUserByToken(token)
+
+        const pets = await Pet.find({ 'user._id': user._id }).sort('-createdAt')
+
+        res.status(200).json({
+            success: true,
+            count: pets.length,
+            data: pets,
+        })
+        return
     }
     static async getAllUserAdoptions(req, res) {
-        res.status(200).json({ message: 'em breve....' })
+        const token = getToken(req)
+        const user = await getUserByToken(token)
+
+        const pets = await Pet.find({ 'adopter._id': user._id }).sort('-createdAt')
+
+        res.status(200).json({
+            success: true,
+            count: pets.length,
+            data: pets,
+        })
+        return
     }
     static async getPetById(req, res) {
         res.status(200).json({ message: 'em breve....' })
