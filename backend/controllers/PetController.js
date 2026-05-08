@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt')
 
 const getToken = require('../helpers/get-tokens')
 const getUserByToken = require('../helpers/get-user-by-token')
+const { countDocuments } = require('../models/User')
 
 module.exports = class PetController {
     static async create(req, res) {
@@ -29,7 +30,7 @@ module.exports = class PetController {
             return
         }
 
-        if(!req.files || req.files.length === 0) {
+        if (!req.files || req.files.length === 0) {
             res.status(422).json({ message: 'A imagem é obrigatória!' })
             return
         }
@@ -65,28 +66,35 @@ module.exports = class PetController {
         }
 
     }
-       static async getAll(req, res) {
-            res.status(200).json({ message: 'em breve....' })
-        }
-        static async getAllUserPets(req, res) {
-            res.status(200).json({ message: 'em breve....' })
-        }
-        static async getAllUserAdoptions(req, res) {
-            res.status(200).json({ message: 'em breve....' })
-        }
-        static async getPetById(req, res) {
-            res.status(200).json({ message: 'em breve....' })
-        }
-        static async removePetById(req, res) {
-            res.status(200).json({ message: 'em breve....' })
-        }
-        static async updatePet(req, res) {
-            res.status(200).json({ message: 'em breve....' })
-        }
-        static async schedule(req, res) {
-            res.status(200).json({ message: 'em breve....' })
-        }
-        static async concludeAdoption(req, res) {
-            res.status(200).json({ message: 'em breve....' })
-        }
+    static async getAll(req, res) {
+        const pets = await Pet.find().sort('-createdAt')
+
+        res.status(200).json({
+            sucess: true,
+            count: pets.length,
+            pets,
+        })
+        return
+    }
+    static async getAllUserPets(req, res) {
+        res.status(200).json({ message: 'em breve....' })
+    }
+    static async getAllUserAdoptions(req, res) {
+        res.status(200).json({ message: 'em breve....' })
+    }
+    static async getPetById(req, res) {
+        res.status(200).json({ message: 'em breve....' })
+    }
+    static async removePetById(req, res) {
+        res.status(200).json({ message: 'em breve....' })
+    }
+    static async updatePet(req, res) {
+        res.status(200).json({ message: 'em breve....' })
+    }
+    static async schedule(req, res) {
+        res.status(200).json({ message: 'em breve....' })
+    }
+    static async concludeAdoption(req, res) {
+        res.status(200).json({ message: 'em breve....' })
+    }
 }
