@@ -11,5 +11,6 @@ app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
 app.use(express.static('public'))
 
 app.use('/users', UserRouters)
+app.use('/pets', PetRouters)
 
 app.listen(5000)
