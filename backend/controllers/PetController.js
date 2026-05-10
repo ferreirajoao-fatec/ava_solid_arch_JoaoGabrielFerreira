@@ -163,12 +163,53 @@ module.exports = class PetController {
 
     }
     static async updatePet(req, res) {
-        res.status(200).json({ message: 'em breve....' })
+        const {name, age, weight, color} = req.body
+        const id = req.params.id
+        const images = req.files
+        const updateData = {}
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            res.status(422).json({ message: 'O id do pet é obrigatório!' })
+            return
+        }
+
+        const pet = await Pet.findById(id)
+        if (!pet) {
+            res.status(404).json({ message: 'Pet não encontrado!' })
+            return
+        }
+
+        const token = getToken(req)
+        const user = await getUserByToken(token)
+
+        if (pet.user._id.toString() !== user._id.toString()) {
+            res.status(403).json({ message: 'Apenas o dono do pet pode editá-lo!' })
+            return
+        }
+
+        if (name) {
+            updateData.name = name
+        }
+        if (age) {
+            updateData.age = age
+        }
+        if (weight) {
+            updateData.weight = weight
+        }
+        if (color) {
+            updateData.color = color
+        }
+        if (images && images.length > 0) {
+            updateData.image = images.map((file) => file.filename)
+        }
+
+        await Pet.findByIdAndUpdate(id, updateData, { new: true })
+        res.status(200).json({ message: 'Pet atualizado com sucesso!', data: updateData })
     }
     static async schedule(req, res) {
         res.status(200).json({ message: 'em breve....' })
     }
     static async concludeAdoption(req, res) {
-        res.status(200).json({ message: 'em breve....' })
+       res.status(200).json({ message: 'em breve....' })
     }
 }
